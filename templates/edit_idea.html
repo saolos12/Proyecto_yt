@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Editar Idea{% endblock %}
+{% block content %}
+<h1 class="text-center">Editar Idea</h1>
+<hr>
+<form method="POST" action="" enctype="multipart/form-data"> {# IMPORTANTE: AÑADIR ESTO #}
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        {{ form.title.label(class="form-label") }}
+        {{ form.title(class="form-control") }}
+        {% for error in form.title.errors %}
+            <span class="text-danger">{{ error }}</span>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.description.label(class="form-label") }}
+        {{ form.description(class="form-control", rows=3) }}
+        {% for error in form.description.errors %}
+            <span class="text-danger">{{ error }}</span>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.format.label(class="form-label") }}
+        {{ form.format(class="form-control") }}
+        {% for error in form.format.errors %}
+            <span class="text-danger">{{ error }}</span>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.tags.label(class="form-label") }}
+        {{ form.tags(class="form-control", placeholder="Ej: Python, IA, tutorial") }}
+        {% for error in form.tags.errors %}
+            <span class="text-danger">{{ error }}</span>
+        {% endfor %}
+    </div>
+    <div class="mb-3">
+        {{ form.status.label(class="form-label") }}
+        {{ form.status(class="form-select") }}
+        {% for error in form.status.errors %}
+            <span class="text-danger">{{ error }}</span>
+        {% endfor %}
+    </div>
+    <div class="mb-3"> {# Campo de subida de imagen #}
+        {{ form.image.label(class="form-label") }}
+        {% if idea.image_filename %}
+            <p>Imagen actual:</p>
+            <img src="{{ url_for('uploaded_file', filename=idea.image_filename) }}" alt="Imagen actual" class="img-thumbnail mb-2" style="max-width: 150px;">
+        {% else %}
+            <p>No hay imagen actual.</p>
+        {% endif %}
+        {{ form.image(class="form-control-file") }}
+        {% for error in form.image.errors %}
+            <span class="text-danger">{{ error }}</span>
+        {% endfor %}
+    </div>
+    {{ form.submit(class="btn btn-primary") }}
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

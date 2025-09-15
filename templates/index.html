@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Mis Ideas{% endblock %}
+{% block content %}
+<h1 class="text-center">Mis Ideas de Video</h1>
+<hr>
+{% if current_user.is_authenticated %}
+<a href="{{ url_for('add_idea') }}" class="btn btn-primary mb-3">Agregar Nueva Idea</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Imagen</th>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Formato</th>
+            <th>Etiquetas</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for idea in ideas %}
+        <tr>
+            <td>
+                {% if idea.image_filename %}
+                    <img src="{{ url_for('uploaded_file', filename=idea.image_filename) }}" alt="Miniatura de la idea" class="idea-image">
+                {% else %}
+                    <img src="{{ url_for('static', filename='uploads/default_idea_placeholder.png') }}" alt="Sin imagen" class="idea-image">
+                {% endif %}
+            </td>
+            <td>{{ idea.title }}</td>
+            <td>{{ idea.description }}</td>
+            <td>{{ idea.format }}</td>
+            <td>{{ idea.tags }}</td>
+            <td>
+                <span class="badge badge-status-{{ idea.status.lower().replace(' ', '-') }}">
+                    {{ idea.status }}
+                </span>
+            </td>
+            <td>
+                {% if idea.author == current_user or current_user.is_admin %}
+                <a href="{{ url_for('edit_idea', idea_id=idea.id) }}" class="btn btn-sm btn-info">Editar</a>
+                <a href="{{ url_for('delete_idea', idea_id=idea.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar esta idea?');">Eliminar</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info" role="alert">
+    Por favor, <a href="{{ url_for('login') }}">inicia sesión</a> para ver y gestionar tus ideas.
+</div>
+{% endif %}
+{% endblock %}
